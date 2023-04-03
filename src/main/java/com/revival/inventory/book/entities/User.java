@@ -26,7 +26,9 @@ public class User implements UserDetails {
     @GeneratedValue
     private BigInteger id;
 
-    private String username;
+    private String firstName;
+
+    private String lastName;
 
     private String password;
 
@@ -39,7 +41,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
