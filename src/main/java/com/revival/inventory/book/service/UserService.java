@@ -13,4 +13,6 @@ public interface UserService {
     List<User> getUsers();
 
     Optional<User> getUser(BigInteger userId);
+
+    User validateUser(User user) throws Exception;
 }

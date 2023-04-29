@@ -30,4 +30,16 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUser(BigInteger userId) {
         return userRepository.findById(userId);
     }
+
+    @Override
+    public User validateUser(User user) throws Exception {
+        User userFromDB = userRepository.findByEmail(user.getEmail());
+        if (userFromDB == null) {
+            throw new Exception("User with email " + user.getEmail() + " is not found");
+        }
+        if (userFromDB.getPassword().equals(user.getPassword())) {
+            return userFromDB;
+        }
+        throw new Exception("Incorrect Password!");
+    }
 }
