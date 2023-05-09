@@ -15,11 +15,11 @@ public class Book {
     @GeneratedValue
     private BigInteger id;
 
-    private String name;
+    private String title;
 
     private BigInteger price;
 
-    private String image;
+    private String imagePath;
 
     public BigInteger getId() {
         return id;
@@ -29,12 +29,12 @@ public class Book {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public BigInteger getPrice() {
@@ -45,11 +45,11 @@ public class Book {
         this.price = price;
     }
 
-    public String getImage() {
-        return image;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }
