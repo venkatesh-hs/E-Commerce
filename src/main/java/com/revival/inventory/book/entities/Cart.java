@@ -1,43 +1,31 @@
 package com.revival.inventory.book.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 import java.math.BigInteger;
+import java.util.List;
 
-@Entity
-@Table(name = "_cart")
 public class Cart {
 
-    @Id
-    @GeneratedValue
-    private BigInteger id;
-    private BigInteger userId;
-    private BigInteger bookId;
+    BigInteger totalPrice;
+    List<Book> books;
 
-    public BigInteger getId() {
-        return id;
+    public Cart(BigInteger totalPrice, List<Book> books) {
+        this.totalPrice = totalPrice;
+        this.books = books;
     }
 
-    public void setId(BigInteger id) {
-        this.id = id;
+    public BigInteger getTotalPrice() {
+        return totalPrice;
     }
 
-    public BigInteger getUserId() {
-        return userId;
+    public void setTotalPrice(BigInteger totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
-    public void setUserId(BigInteger userId) {
-        this.userId = userId;
+    public List<Book> getBooks() {
+        return books;
     }
 
-    public BigInteger getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(BigInteger bookId) {
-        this.bookId = bookId;
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }

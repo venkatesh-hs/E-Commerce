@@ -1,14 +1,19 @@
 package com.revival.inventory.book.controller;
 
 import com.revival.inventory.book.entities.Cart;
+import com.revival.inventory.book.entities.CartItem;
 import com.revival.inventory.book.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigInteger;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -19,9 +24,16 @@ public class CartController {
     private CartService cartService;
 
     @PostMapping
-    private ResponseEntity<Cart> AddToCart(@RequestBody Cart cart) {
+    private ResponseEntity<CartItem> addToCart(@RequestBody CartItem cartItem) {
         return ResponseEntity
                 .ok()
-                .body(cartService.AddToCart(cart));
+                .body(cartService.addToCart(cartItem));
+    }
+
+    @GetMapping (path = "/{user_id}")
+    private ResponseEntity<Cart> GetUserCart(@PathVariable("user_id") BigInteger userId) {
+        return ResponseEntity
+                .ok()
+                .body(cartService.getUserCart(userId));
     }
 }
