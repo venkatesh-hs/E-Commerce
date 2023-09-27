@@ -1,4 +1,4 @@
-package com.revival.inventory.book.config;
+package com.revival.inventory.book.security;
 
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
