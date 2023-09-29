@@ -19,6 +19,7 @@ import java.util.function.Function;
 @AllArgsConstructor
 public class JwtService {
     private static final String SECRET_KEY = "5a5c499df9c21c0e26e9b40c6e6106d327123c9645751bfa4c2ae2c18adbe61e0cf4eaae210238fe53c9e0e494937da429fb04d91d2b914e9f904418435c1b79";
+
     public boolean isTokenValid(String jwt, UserDetails userDetails) {
         String userName = extractUserEmail(jwt);
         return userName.equals(userDetails.getUsername()) && isTokenExpired(jwt);
