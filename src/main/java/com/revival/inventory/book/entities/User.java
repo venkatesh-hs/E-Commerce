@@ -41,8 +41,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private String token;
-
     public void setId(BigInteger id) {
         this.id = id;
     }

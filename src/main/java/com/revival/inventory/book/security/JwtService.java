@@ -27,7 +27,7 @@ public class JwtService {
 
     private boolean isTokenExpired(String token) {
         Date expirationDate = extractClaims(token, Claims::getExpiration);
-        return expirationDate.before(new Date());
+        return expirationDate.after(new Date());
     }
 
     public String extractUserEmail(String jwt) {
@@ -59,7 +59,7 @@ public class JwtService {
                 .addClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

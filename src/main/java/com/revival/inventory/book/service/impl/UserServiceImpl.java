@@ -6,7 +6,9 @@ import com.revival.inventory.book.repository.UserRepository;
 import com.revival.inventory.book.security.JwtService;
 import com.revival.inventory.book.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -17,10 +19,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    public UserRepository userRepository;
-
+    private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public void createUser(User requestUser) {
@@ -29,8 +31,7 @@ public class UserServiceImpl implements UserService {
                 .firstName(requestUser.getFirstName())
                 .lastName(requestUser.getLastName())
                 .email(requestUser.getEmail())
-                .password(requestUser.getPassword())
-                .token(jwtService.generateToken(requestUser))
+                .password(passwordEncoder.encode(requestUser.getPassword()))
                 .role(Role.USER)
                 .build();
         userRepository.save(user);
@@ -47,14 +48,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User validateUser(User user) throws Exception {
-        User userFromDB = userRepository.findByEmail(user.getEmail());
-        if (userFromDB == null) {
-            throw new Exception("User with email " + user.getEmail() + " is not found");
-        }
-        if (userFromDB.getPassword().equals(user.getPassword())) {
-            return userFromDB;
-        }
-        throw new Exception("Incorrect Password!");
+    public String authenticateUser(User user) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getEmail(),
+                        user.getPassword()
+                )
+        );
+        return jwtService.generateToken(user);
     }
 }

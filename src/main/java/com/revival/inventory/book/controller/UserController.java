@@ -51,10 +51,10 @@ public class UserController {
                 .body(userService.getUsers());
     }
 
-    @PostMapping("/validate")
-    private ResponseEntity<User> validateUser(@RequestBody User user) throws Exception {
+    @PostMapping("/authenticate")
+    private ResponseEntity<String> authenticateUser(@RequestBody User user) throws Exception {
         return ResponseEntity
                 .ok()
-                .body(userService.validateUser(user));
+                .body(userService.authenticateUser(user));
     }
 }

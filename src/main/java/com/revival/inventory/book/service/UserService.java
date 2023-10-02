@@ -14,5 +14,5 @@ public interface UserService {
 
     Optional<User> getUser(BigInteger userId);
 
-    User validateUser(User user) throws Exception;
+    String authenticateUser(User user) throws Exception;
 }
