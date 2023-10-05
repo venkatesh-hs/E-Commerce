@@ -1,5 +1,6 @@
 package com.revival.inventory.book.controller;
 
+import com.revival.inventory.book.entities.AuthenticatedUser;
 import com.revival.inventory.book.entities.User;
 import com.revival.inventory.book.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,8 @@ public class UserController {
 
     @PostMapping
     private ResponseEntity<User> createUser(@RequestBody User user) {
-        userService.createUser(user);
         return ResponseEntity
-                .ok()
-                .build();
+                .ok(userService.createUser(user));
     }
 
     @GetMapping("/{id}")
@@ -52,9 +51,8 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    private ResponseEntity<String> authenticateUser(@RequestBody User user) throws Exception {
+    private ResponseEntity<AuthenticatedUser> authenticateUser(@RequestBody User user) throws Exception {
         return ResponseEntity
-                .ok()
-                .body(userService.authenticateUser(user));
+                .ok(userService.authenticateUser(user));
     }
 }
