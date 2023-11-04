@@ -32,6 +32,12 @@ public class CartServiceImpl implements CartService {
         return prepareUserCart(bookIds);
     }
 
+    @Override
+    public Cart removeFromCart(BigInteger userId, BigInteger bookId) {
+        cartRepository.removeBookFromCart(userId, bookId);
+        return getUserCart(userId);
+    }
+
     private Cart prepareUserCart(List<BigInteger> bookIds) {
         List<Book> books = bookIds.stream()
                 .map(bookId -> bookService.getBook(bookId))

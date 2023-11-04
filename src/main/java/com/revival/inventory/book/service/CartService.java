@@ -7,5 +7,8 @@ import java.math.BigInteger;
 
 public interface CartService {
     CartItem addToCart(CartItem cartItem);
+
     Cart getUserCart(BigInteger userId);
+
+    Cart removeFromCart(BigInteger userId, BigInteger bookId);
 }

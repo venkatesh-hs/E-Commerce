@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,10 +31,17 @@ public class CartController {
                 .body(cartService.addToCart(cartItem));
     }
 
-    @GetMapping (path = "/{user_id}")
+    @GetMapping(path = "/{user_id}")
     private ResponseEntity<Cart> GetUserCart(@PathVariable("user_id") BigInteger userId) {
         return ResponseEntity
                 .ok()
                 .body(cartService.getUserCart(userId));
+    }
+
+    @PatchMapping(path = "/{user_id}/remove/{book_id}")
+    private ResponseEntity<Cart> removeFromCart(@PathVariable("user_id") BigInteger userId, @PathVariable("book_id") BigInteger bookId) {
+        return ResponseEntity
+                .ok()
+                .body(cartService.removeFromCart(userId, bookId));
     }
 }
