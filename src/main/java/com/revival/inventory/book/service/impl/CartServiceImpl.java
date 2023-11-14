@@ -1,6 +1,7 @@
 package com.revival.inventory.book.service.impl;
 
 import com.revival.inventory.book.entities.Book;
+import com.revival.inventory.book.entities.BookItem;
 import com.revival.inventory.book.entities.Cart;
 import com.revival.inventory.book.entities.CartItem;
 import com.revival.inventory.book.repository.CartRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -23,30 +25,61 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartItem addToCart(CartItem cartItem) {
-        return cartRepository.save(cartItem);
+        var userId = cartItem.getUserId();
+        var bookId = cartItem.getBookId();
+        BigInteger quantity = getBookQuantity(userId, bookId);
+        if (quantity != null) {
+            cartRepository.updateCartItem(userId, bookId, quantity.add(BigInteger.ONE));
+            return cartRepository.findByUserAndBook(userId, bookId);
+        } else {
+            cartItem.setQuantity(BigInteger.ONE);
+            return cartRepository.save(cartItem);
+        }
+    }
+
+    private BigInteger getBookQuantity(BigInteger userId, BigInteger bookId) {
+        CartItem cartItem = cartRepository.findByUserAndBook(userId, bookId);
+        return cartItem != null ? cartItem.getQuantity() : null;
     }
 
     @Override
     public Cart getUserCart(BigInteger userId) {
-        List<BigInteger> bookIds = cartRepository.getUserBooks(userId);
-        return prepareUserCart(bookIds);
+        List<CartItem> cartItems = cartRepository.getCartItems(userId);
+        return prepareUserCart(cartItems);
     }
 
     @Override
     public Cart removeFromCart(BigInteger userId, BigInteger bookId) {
-        cartRepository.removeBookFromCart(userId, bookId);
+        CartItem cartItem = cartRepository.findByUserAndBook(userId, bookId);
+        BigInteger quantity = cartItem.getQuantity();
+        if (quantity.equals(BigInteger.ONE)) {
+            cartRepository.removeBookFromCart(userId, bookId);
+        } else {
+            cartRepository.updateCartItem(userId, bookId, quantity.subtract(BigInteger.ONE));
+        }
         return getUserCart(userId);
     }
 
-    private Cart prepareUserCart(List<BigInteger> bookIds) {
-        List<Book> books = bookIds.stream()
-                .map(bookId -> bookService.getBook(bookId))
-                .toList();
+    private Cart prepareUserCart(List<CartItem> cartItems) {
+        List<BookItem> books = cartItems.stream()
+                .map(this::buildBookItem).collect(Collectors.toList());
 
         int cartTotal = books.stream()
-                .mapToInt(book -> book.getPrice().intValue())
-                .sum();
+                .map(bookItem -> bookItem.getQuantity().intValue() * bookItem.getPrice().intValue())
+                .reduce(0, Integer::sum);
 
         return new Cart(BigInteger.valueOf(cartTotal), books);
+    }
+
+    private BookItem buildBookItem(CartItem cartItem) {
+        Book book = bookService.getBook(cartItem.getBookId());
+        return BookItem
+                .builder()
+                .id(book.getId())
+                .title(book.getTitle())
+                .price(book.getPrice())
+                .imagePath(book.getImagePath())
+                .quantity(cartItem.getQuantity())
+                .build();
     }
 }

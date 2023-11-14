@@ -14,9 +14,23 @@ public interface CartRepository extends JpaRepository<CartItem, BigInteger> {
             nativeQuery = true)
     List<BigInteger> getUserBooks(BigInteger userId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query(value = "delete from _cart where user_id = ?1 and book_id = ?2",
             nativeQuery = true)
     void removeBookFromCart(BigInteger userId, BigInteger bookId);
+
+    @Query(value = "select * from _cart where user_id = ?1 and book_id = ?2",
+            nativeQuery = true)
+    CartItem findByUserAndBook(BigInteger userId, BigInteger bookId);
+
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query(value = "update _cart set quantity = ?3 where user_id = ?1 and book_id = ?2",
+            nativeQuery = true)
+    void updateCartItem(BigInteger userId, BigInteger bookId, BigInteger quantity);
+
+    @Query(value = "select * from _cart where user_id = ?1",
+            nativeQuery = true)
+    List<CartItem> getCartItems(BigInteger userId);
 }
