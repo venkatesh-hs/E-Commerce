@@ -6,7 +6,7 @@ import com.revival.inventory.book.entities.CartItem;
 import java.math.BigInteger;
 
 public interface CartService {
-    CartItem addToCart(CartItem cartItem);
+    Cart addToCart(CartItem cartItem);
 
     Cart getUserCart(BigInteger userId);
 

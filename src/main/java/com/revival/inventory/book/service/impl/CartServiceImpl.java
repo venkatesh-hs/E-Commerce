@@ -24,17 +24,17 @@ public class CartServiceImpl implements CartService {
     private BookService bookService;
 
     @Override
-    public CartItem addToCart(CartItem cartItem) {
+    public Cart addToCart(CartItem cartItem) {
         var userId = cartItem.getUserId();
         var bookId = cartItem.getBookId();
         BigInteger quantity = getBookQuantity(userId, bookId);
         if (quantity != null) {
             cartRepository.updateCartItem(userId, bookId, quantity.add(BigInteger.ONE));
-            return cartRepository.findByUserAndBook(userId, bookId);
         } else {
             cartItem.setQuantity(BigInteger.ONE);
-            return cartRepository.save(cartItem);
+            cartRepository.save(cartItem);
         }
+        return getUserCart(userId);
     }
 
     private BigInteger getBookQuantity(BigInteger userId, BigInteger bookId) {
